@@ -50,6 +50,8 @@ import dma_trans_pkg::*;
 `define TX_DMA      32'h7c43_0000
 `define DDR_BASE    32'h8000_0000
 
+import dmac_regmap::*;
+
 program test_program;
 
   test_harness_env env;
@@ -59,6 +61,8 @@ program test_program;
 
   axi_dmac_params_cfg_t m_params;
   axi_dmac_params_cfg_t s_params;
+
+  DMAC_REGMAP #(5, 7) regmap;
 
   initial begin
 
@@ -71,6 +75,10 @@ program test_program;
               `TH.`DDR_AXI.inst.IF);
 
     #2ps;
+
+    regmap = new;
+    `INFO(("Register value: %h", regmap.IRQ_MASK_R.get()));
+    `INFO(("Field value: %h", regmap.IRQ_MASK_R.TRANSFER_COMPLETED_F.get_reset_value()));
 
     setLoggerVerbosity(6);
     env.start();

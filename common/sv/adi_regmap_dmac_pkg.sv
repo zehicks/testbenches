@@ -235,3 +235,160 @@ package adi_regmap_dmac_pkg;
   `define GET_DMAC_CURRENT_DEST_ADDRESS_LOW_CURRENT_DEST_ADDRESS_LOW(x) GetField(DMAC_CURRENT_DEST_ADDRESS_LOW,"CURRENT_DEST_ADDRESS_LOW",x)
 
 endpackage
+
+
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+
+`include "utils.svh"
+
+package dmac_regmap;
+  import logger_pkg::*;
+
+  typedef enum {NA, R, RO, ROV, RW, RW1C, RW1CV, RW1S, W1S, WO} acc_t;
+
+  typedef struct {
+    int msb;
+    int lsb;
+    acc_t access;
+    logic [31:0] reset_value;
+  } field_t;
+
+
+  class register_base;
+    protected string name;
+    protected logic [31:0] value;
+    protected int address;
+
+    function new(
+      input string name,
+      input int address);
+      
+      this.name = name;
+      this.value = 'h0;
+      this.address = address;
+    endfunction
+
+    function logic [31:0] get();
+      `INFOV(("Getting reg %s with value %h", this.name, this.value), 10);
+
+      return value;
+    endfunction
+
+    function void set(input logic [31:0] value);
+      this.value = value;
+    endfunction
+
+    function int getAddress();
+      return this.address;
+    endfunction
+
+    function string getName();
+      return this.name;
+    endfunction
+  endclass
+
+  class field_base;
+    local string name;
+    local int msb;
+    local int lsb;
+    local acc_t access;
+    local logic [31:0] reset_value;
+
+    local register_base reg_handle;
+
+    function new(
+      input string name,
+      input int msb,
+      input int lsb,
+      input acc_t access,
+      input int reset_value,
+      input register_base reg_handle);
+
+      this.name = name;
+      this.msb = msb;
+      this.lsb = lsb;
+      this.access = access;
+      this.reset_value = reset_value;
+      this.reg_handle = reg_handle;
+    endfunction
+
+    function logic [31:0] get();
+      automatic logic [31:0] value = 'h0;
+      automatic logic [31:0] regvalue = this.reg_handle.get();
+
+      for (int i=this.msb+1;i<=31;i++) begin
+        regvalue[i]=1'b0;
+      end
+      value = regvalue >> this.lsb;
+
+      `INFOV(("Getting reg %s[%0d:%0d] field %s with %h", this.reg_handle.getName(), this.msb, this.lsb, this.name, value), 10);
+
+      return value;
+    endfunction
+
+    function void set(input logic [31:0] set_value);
+      automatic logic [31:0] update_value = 'h0;
+      automatic logic [31:0] mask = 'hFFFF;
+
+      update_value = set_value << this.lsb;
+      for (int i=this.msb+1;i<=31;i++) begin
+        update_value[i]=1'b0;
+      end
+
+      mask = mask << this.lsb;
+      for (int i=this.msb+1;i<=31;i++) begin
+        mask[i]=1'b0;
+      end
+
+      this.reg_handle.set(this.reg_handle.get() & ~mask);
+      this.reg_handle.set(this.reg_handle.get() | update_value);
+
+      `INFOV(("Setting reg %s[%0d:%0d] field %s with %h (%h)", this.reg_handle.getName(), this.msb, this.lsb, this.name, set_value, this.reg_handle.get()), 10);
+    endfunction
+
+    function logic [31:0] get_reset_value();
+      `INFOV(("Getting reg %s[%0d:%0d] field %s with reset value %h", this.reg_handle.getName(), this.msb, this.lsb, this.name, this.reset_value), 10);
+
+      return this.reset_value;
+    endfunction
+  endclass
+
+
+  class DMAC_REGMAP #(int DMA_DATA_WIDTH_DEST = 0, int DMA_TYPE_DEST = 0);
+    class INTERFACE_DESCRIPTION #(int DMA_DATA_WIDTH_DEST = 0, int DMA_TYPE_DEST = 0) extends register_base;
+      field_base BYTES_PER_BEAT_DEST_LOG2_F;
+      field_base DMA_TYPE_DEST_F;
+      
+      function new(input string name);
+        super.new(name, 'h0010);
+        this.BYTES_PER_BEAT_DEST_LOG2_F = new("BYTES_PER_BEAT_DEST_LOG2", 3, 0, R, $clog2(DMA_DATA_WIDTH_DEST/8), this);
+        this.DMA_TYPE_DEST_F = new("DMA_TYPE_DEST", 5, 4, R, DMA_TYPE_DEST, this);
+      endfunction
+    endclass
+
+    INTERFACE_DESCRIPTION #(DMA_DATA_WIDTH_DEST, DMA_TYPE_DEST) INTERFACE_DESCRIPTION_R;
+
+    class IRQ_MASK extends register_base;
+      field_base TRANSFER_COMPLETED_F;
+      field_base TRANSFER_QUEUED_F;
+      
+      function new(input string name);
+        super.new(name, 'h0080);
+        this.TRANSFER_COMPLETED_F = new("TRANSFER_COMPLETED", 1, 1, RW, 'h1, this);
+        this.TRANSFER_QUEUED_F = new("TRANSFER_QUEUED", 0, 0, RW, 'h1, this);
+      endfunction
+    endclass
+
+    IRQ_MASK IRQ_MASK_R;
+
+    function new();
+      this.INTERFACE_DESCRIPTION_R = new("INTERFACE_DESCRIPTION");
+      this.IRQ_MASK_R = new("IRQ_MASK");
+    endfunction
+  endclass
+endpackage
