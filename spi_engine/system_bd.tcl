@@ -57,6 +57,11 @@ if {$ad_project_params(ECHO_SCLK)} {
     create_bd_port -dir I spi_engine_echo_sclk
     ad_connect spi_engine_echo_sclk spi_engine/echo_sclk
 }
+if {$ad_project_params(NUM_WAIT_TRIG)} {
+    set num_wait_trig $ad_project_params(NUM_WAIT_TRIG)
+    create_bd_port -dir I -from [expr $num_wait_trig-1] -to 0 spi_engine_wait_trig
+   #ad_connect spi_engine_wait_trig spi_engine/wait_trig
+}
 
 ad_connect spi_engine_spi_clk spi_clkgen/clk_0
 ad_connect spi_engine_irq spi_engine/irq

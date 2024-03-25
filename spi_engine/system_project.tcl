@@ -39,6 +39,7 @@ adi_sim_project_files [list \
  "spi_engine.svh" \
  "tests/test_program.sv" \
  "tests/test_sleep_delay.sv"\
+ "tests/test_wait.sv"\
  "system_tb.sv" \
  ]
 
@@ -48,5 +49,9 @@ adi_sim_add_define "TEST_PROGRAM=test_program"
 if {$ad_project_params(ECHO_SCLK)} {
   adi_sim_add_define DEF_ECHO_SCLK
 }
+if {$ad_project_params(NUM_WAIT_TRIG)} {
+  adi_sim_add_define DEF_WAIT_TRIG
+}
+
 
 adi_sim_generate $project_name

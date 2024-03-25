@@ -13,4 +13,4 @@ set ad_project_params(SDI_FIFO_ADDR_WIDTH)  5
 set ad_project_params(SDO_FIFO_ADDR_WIDTH)  5
 set ad_project_params(SYNC_FIFO_ADDR_WIDTH) 4
 set ad_project_params(CMD_FIFO_ADDR_WIDTH)  4
-set ad_project_params(NUM_WAIT_TRIG)        0
+set ad_project_params(NUM_WAIT_TRIG)        8

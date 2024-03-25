@@ -47,6 +47,9 @@ module system_tb();
 `ifdef DEF_ECHO_SCLK
   wire spi_engine_echo_sclk;
 `endif
+`ifdef DEF_WAIT_TRIG
+  wire [(`NUM_WAIT_TRIG)-1:0] spi_engine_wait_trig;
+`endif
 
   `TEST_PROGRAM test(
     .spi_engine_irq(spi_engine_irq),
@@ -55,6 +58,9 @@ module system_tb();
     .spi_engine_spi_clk(spi_engine_spi_clk),
     `ifdef DEF_ECHO_SCLK
     .spi_engine_echo_sclk(spi_engine_echo_sclk),
+    `endif
+    `ifdef DEF_WAIT_TRIG
+    .spi_engine_wait_trig(spi_engine_wait_trig),
     `endif
     .spi_engine_spi_sdi(spi_engine_spi_sdi));
 
@@ -66,6 +72,9 @@ module system_tb();
     .spi_engine_spi_sdi(spi_engine_spi_sdi),
     `ifdef DEF_ECHO_SCLK
     .spi_engine_echo_sclk(spi_engine_echo_sclk),
+    `endif
+    `ifdef DEF_WAIT_TRIG
+    .spi_engine_wait_trig(spi_engine_wait_trig),
     `endif
     .spi_engine_spi_sdo(spi_engine_spi_sdo));
 
