@@ -44,39 +44,16 @@ package dmac_api_pkg;
   import reg_accessor_pkg::*;
   import dma_trans_pkg::*;
 
-  // DMAC parameter setup from configuration file
-  typedef struct {
-    int DMA_TYPE_SRC;
-    int DMA_TYPE_DEST;
-    int ID;
-    int AXI_SLICE_SRC;
-    int AXI_SLICE_DEST;
-    int SYNC_TRANSFER_START;
-    int DMA_LENGTH_WIDTH;
-    int DMA_2D_TRANSFER;
-    int MAX_BYTES_PER_BURST;
-    int CYCLIC;
-    int DMA_DATA_WIDTH_SRC;
-    int DMA_DATA_WIDTH_DEST;
-  } axi_dmac_params_cfg_t;
-
   class dmac_api extends adi_peripheral;
 
     // DMAC parameters
     axi_dmac_params_t p;
 
-    // DMAC parameter setup from configuration file
-    axi_dmac_params_cfg_t params;
-
     // -----------------
     //
     // -----------------
-    function new(string name, reg_accessor bus, bit [31:0] base_address, axi_dmac_params_cfg_t params);
+    function new(string name, reg_accessor bus, bit [31:0] base_address);
       super.new(name, bus, base_address);
-      this.params = params;
-
-      `INFO(("Parameter test example: %d", this.params.DMA_DATA_WIDTH_SRC));
-      `INFO(("Parameter test example: %d", params.DMA_DATA_WIDTH_SRC));
     endfunction
 
     // -----------------
