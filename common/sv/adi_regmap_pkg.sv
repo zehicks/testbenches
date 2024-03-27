@@ -150,7 +150,7 @@ package regmap_pkg;
 
   class register_base;
     protected string name;
-    protected logic [31:0] value;
+    logic [31:0] value;
     protected logic [31:0] reset_value;
     protected int address;
     protected bit initialization_done;

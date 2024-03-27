@@ -59,6 +59,9 @@ package data_offload_api_pkg;
     // -----------------
     task sanity_test();
       this.axi_verify(this.do_regmap.VERSION_R.get_address(), this.do_regmap.VERSION_R.get_reset_value());
+      `INFO(("Version register before: %h", this.do_regmap.VERSION_R.get()));
+      this.axi_read(this.do_regmap.VERSION_R.get_address(), this.do_regmap.VERSION_R.value);
+      `INFO(("Version register after: %h", this.do_regmap.VERSION_R.get()));
     endtask
 
     // -----------------
