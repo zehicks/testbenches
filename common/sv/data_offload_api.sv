@@ -48,7 +48,7 @@ package data_offload_api_pkg;
 
   class data_offload_api extends adi_peripheral;
 
-    DO_REGMAP #(0,0,0,0,5) do_regmap;
+    DO_REGMAP #(0,0,0,0,5) regmap;
 
     // -----------------
     function new(string name, reg_accessor bus, bit [31:0] base_address);
