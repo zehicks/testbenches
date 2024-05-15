@@ -60,50 +60,50 @@ package data_offload_api_pkg;
     task sanity_test();
       this.axi_verify(this.regmap.VERSION_R.get_address(), this.regmap.VERSION_R.get_reset_value());
       `INFO(("Version register before: %h", this.regmap.VERSION_R.get()));
-      this.axi_read(this.regmap.VERSION_R.get_address(), this.regmap.VERSION_R.value);
+      this.axi_read(this.regmap.VERSION_R);
       `INFO(("Version register after: %h", this.regmap.VERSION_R.get()));
     endtask
 
     // -----------------
     task set_transfer_length(input int length);
       this.regmap.TRANSFER_LENGTH_R.PARTIAL_LENGTH_F.set(length-1);
-      this.axi_write(this.regmap.TRANSFER_LENGTH_R.get_address(), this.regmap.TRANSFER_LENGTH_R.get());
+      this.axi_write(this.regmap.TRANSFER_LENGTH_R);
     endtask
 
     // -----------------
     task enable_oneshot_mode();
       this.regmap.CONTROL_R.ONESHOT_EN_F.set(1);
-      this.axi_write(this.regmap.CONTROL_R.get_address(), this.regmap.CONTROL_R.get());
+      this.axi_write(this.regmap.CONTROL_R);
     endtask
 
     // -----------------
     task disable_oneshot_mode();
       this.regmap.CONTROL_R.ONESHOT_EN_F.set(0);
-      this.axi_write(this.regmap.CONTROL_R.get_address(), this.regmap.CONTROL_R.get());
+      this.axi_write(this.regmap.CONTROL_R);
     endtask
 
     // -----------------
     task enable_bypass_mode();
       this.regmap.CONTROL_R.OFFLOAD_BYPASS_F.set(1);
-      this.axi_write(this.regmap.CONTROL_R.get_address(), this.regmap.CONTROL_R.get());
+      this.axi_write(this.regmap.CONTROL_R);
     endtask
 
     // -----------------
     task disable_bypass_mode();
       this.regmap.CONTROL_R.OFFLOAD_BYPASS_F.set(0);
-      this.axi_write(this.regmap.CONTROL_R.get_address(), this.regmap.CONTROL_R.get());
+      this.axi_write(this.regmap.CONTROL_R);
     endtask
 
     // -----------------
     task assert_reset();
       this.regmap.RESETN_OFFLOAD_R.RESETN_F.set(0);
-      this.axi_write(this.regmap.RESETN_OFFLOAD_R.get_address(), this.regmap.RESETN_OFFLOAD_R.get());
+      this.axi_write(this.regmap.RESETN_OFFLOAD_R);
     endtask
 
     // -----------------
     task deassert_reset();
       this.regmap.RESETN_OFFLOAD_R.RESETN_F.set(1);
-      this.axi_write(this.regmap.RESETN_OFFLOAD_R.get_address(), this.regmap.RESETN_OFFLOAD_R.get());
+      this.axi_write(this.regmap.RESETN_OFFLOAD_R);
     endtask
 
   endclass

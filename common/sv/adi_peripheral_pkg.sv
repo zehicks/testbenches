@@ -38,6 +38,7 @@ package adi_peripheral_pkg;
 
   import logger_pkg::*;
   import reg_accessor_pkg::*;
+  import regmap_pkg::*;
 
    //============================================================================
   // Base peripheral class
@@ -76,20 +77,18 @@ package adi_peripheral_pkg;
     // 
     // -----------------
     task axi_read(
-      input  [31:0] addr,
-      output [31:0] data);
+      input register_base register);
 
-      this.bus.RegRead32(this.base_address + addr, data);
+      this.bus.RegRead32(this.base_address + register.get_address(), register.value);
     endtask: axi_read
 
     // -----------------
     //
     // -----------------
     task axi_write(
-      input [31:0] addr,
-      input [31:0] data);
+      input register_base register);
 
-      this.bus.RegWrite32(this.base_address + addr, data);
+      this.bus.RegWrite32(this.base_address + register.get_address(), register.get());
     endtask: axi_write
 
     // -----------------

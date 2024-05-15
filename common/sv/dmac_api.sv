@@ -81,7 +81,7 @@ package dmac_api_pkg;
       // this.axi_read(GetAddrs(DMAC_PERIPHERAL_ID), val);
       // p.ID = `GET_DMAC_PERIPHERAL_ID_PERIPHERAL_ID(val);
       // ---- change
-      this.axi_read(this.regmap.PERIPHERAL_ID_R.get_address(), this.regmap.PERIPHERAL_ID_R.value);
+      this.axi_read(this.regmap.PERIPHERAL_ID_R);
       p.ID = this.regmap.PERIPHERAL_ID_R.PERIPHERAL_ID_F.get();
       // ---> end
       // <--- begin
@@ -94,7 +94,7 @@ package dmac_api_pkg;
       // p.DMA_TYPE_SRC = `GET_DMAC_INTERFACE_DESCRIPTION_DMA_TYPE_SRC(val);
       // bpb_width_log2 = `GET_DMAC_INTERFACE_DESCRIPTION_BYTES_PER_BURST_WIDTH(val);
       // ---- change
-      this.axi_read(this.regmap.INTERFACE_DESCRIPTION_1_R.get_address(), this.regmap.INTERFACE_DESCRIPTION_1_R.value);
+      this.axi_read(this.regmap.INTERFACE_DESCRIPTION_1_R);
       bpb_dest_log2 = this.regmap.INTERFACE_DESCRIPTION_1_R.BYTES_PER_BEAT_DEST_LOG2_F.get();
       p.DMA_DATA_WIDTH_DEST = (2**bpb_dest_log2)*8;
       p.DMA_TYPE_DEST = this.regmap.INTERFACE_DESCRIPTION_1_R.DMA_TYPE_DEST_F.get();
@@ -109,13 +109,13 @@ package dmac_api_pkg;
       //                   `SET_DMAC_X_LENGTH_X_LENGTH(32'h0));
       // ---- change
       this.regmap.X_LENGTH_R.X_LENGTH_F.set(32'h0);
-      this.axi_write(this.regmap.X_LENGTH_R.get_address(), this.regmap.X_LENGTH_R.get());
+      this.axi_write(this.regmap.X_LENGTH_R);
       // ---> end
       // <--- begin
       // this.axi_read(GetAddrs(DMAC_X_LENGTH), val);
       // p.DMA_LENGTH_ALIGN = `GET_DMAC_X_LENGTH_X_LENGTH(val)+1;
       // ---- change
-      this.axi_read(this.regmap.X_LENGTH_R.get_address(), this.regmap.X_LENGTH_R.value);
+      this.axi_read(this.regmap.X_LENGTH_R);
       p.ID = this.regmap.X_LENGTH_R.X_LENGTH_F.get()+1;
       // ---> end
       // <--- begin
@@ -123,7 +123,7 @@ package dmac_api_pkg;
       //                   `SET_DMAC_Y_LENGTH_Y_LENGTH(32'hFFFFFFFF));
       // ---- change
       this.regmap.Y_LENGTH_R.Y_LENGTH_F.set(32'hFFFFFFFF);
-      this.axi_write(this.regmap.Y_LENGTH_R.get_address(), this.regmap.Y_LENGTH_R.get());
+      this.axi_write(this.regmap.Y_LENGTH_R);
       // ---> end
       // <--- begin
       // this.axi_read(GetAddrs(DMAC_Y_LENGTH), val);
@@ -134,13 +134,13 @@ package dmac_api_pkg;
       //   this.axi_write(GetAddrs(DMAC_Y_LENGTH), 32'h0);
       // end
       // ---- change
-      this.axi_read(this.regmap.Y_LENGTH_R.get_address(), this.regmap.Y_LENGTH_R.value);
+      this.axi_read(this.regmap.Y_LENGTH_R);
       if (this.regmap.Y_LENGTH_R.Y_LENGTH_F.get()==0) begin
         p.DMA_2D_TRANSFER = 0;
       end else begin 
         p.DMA_2D_TRANSFER = 1;
         this.regmap.Y_LENGTH_R.Y_LENGTH_F.set(32'h0);
-        this.axi_write(this.regmap.Y_LENGTH_R.get_address(), this.regmap.Y_LENGTH_R.get());
+        this.axi_write(this.regmap.Y_LENGTH_R);
       end
       // ---> end
     endtask : discover_params
@@ -177,7 +177,7 @@ package dmac_api_pkg;
       //                   `SET_DMAC_CONTROL_ENABLE(1));
       // ---- change
       this.regmap.CONTROL_R.ENABLE_F.set(1);
-      this.axi_write(this.regmap.CONTROL_R.get_address(), this.regmap.CONTROL_R.get());
+      this.axi_write(this.regmap.CONTROL_R);
       // ---> end
     endtask : enable_dma
 
@@ -190,7 +190,7 @@ package dmac_api_pkg;
       //                   `SET_DMAC_CONTROL_PAUSE(0));
       // ---- change
       this.regmap.CONTROL_R.PAUSE_F.set(0);
-      this.axi_write(this.regmap.CONTROL_R.get_address(), this.regmap.CONTROL_R.get());
+      this.axi_write(this.regmap.CONTROL_R);
       // ---> end
     endtask : disable_dma
 
@@ -207,7 +207,7 @@ package dmac_api_pkg;
       this.regmap.FLAGS_R.CYCLIC_F.set(flags[0]);
       this.regmap.FLAGS_R.TLAST_F.set(flags[1]);
       this.regmap.FLAGS_R.PARTIAL_REPORTING_EN_F.set(flags[2]);
-      this.axi_write(this.regmap.FLAGS_R.get_address(), this.regmap.FLAGS_R.get());
+      this.axi_write(this.regmap.FLAGS_R);
       // ---> end
     endtask : set_flags
 
@@ -228,7 +228,7 @@ package dmac_api_pkg;
           // while (`GET_DMAC_TRANSFER_SUBMIT_TRANSFER_SUBMIT(regData) != 0);
           // ---- change
           do
-            this.axi_read(this.regmap.TRANSFER_SUBMIT_R.get_address(), this.regmap.TRANSFER_SUBMIT_R.value);
+            this.axi_read(this.regmap.TRANSFER_SUBMIT_R);
           while (this.regmap.TRANSFER_SUBMIT_R.TRANSFER_SUBMIT_F.get() != 0);
           // ---> end
           `INFO(("Ready for submission "));
@@ -252,7 +252,7 @@ package dmac_api_pkg;
       //                   `SET_DMAC_TRANSFER_SUBMIT_TRANSFER_SUBMIT(1));
       // ---- change
       this.regmap.TRANSFER_SUBMIT_R.TRANSFER_SUBMIT_F.set(1);
-      this.axi_write(this.regmap.TRANSFER_SUBMIT_R.get_address(), this.regmap.TRANSFER_SUBMIT_R.get());
+      this.axi_write(this.regmap.TRANSFER_SUBMIT_R);
       // ---> end
       `INFO(("Transfer start"));
     endtask : transfer_start
@@ -266,7 +266,7 @@ package dmac_api_pkg;
       //                   `SET_DMAC_DEST_ADDRESS_DEST_ADDRESS(xfer_addr));
       // ---- change
       this.regmap.DEST_ADDRESS_R.DEST_ADDRESS_F.set(xfer_addr);
-      this.axi_write(this.regmap.DEST_ADDRESS_R.get_address(), this.regmap.DEST_ADDRESS_R.get());
+      this.axi_write(this.regmap.DEST_ADDRESS_R);
       // ---> end
     endtask : set_dest_addr
 
@@ -279,7 +279,7 @@ package dmac_api_pkg;
       //                   `SET_DMAC_SRC_ADDRESS_SRC_ADDRESS(xfer_addr));
       // ---- change
       this.regmap.SRC_ADDRESS_R.SRC_ADDRESS_F.set(xfer_addr);
-      this.axi_write(this.regmap.SRC_ADDRESS_R.get_address(), this.regmap.SRC_ADDRESS_R.get());
+      this.axi_write(this.regmap.SRC_ADDRESS_R);
       // ---> end
     endtask : set_src_addr
 
@@ -295,14 +295,14 @@ package dmac_api_pkg;
       //                   `SET_DMAC_X_LENGTH_X_LENGTH(xfer_length_x));
       // ---- change
       this.regmap.X_LENGTH_R.X_LENGTH_F.set(xfer_length_x);
-      this.axi_write(this.regmap.X_LENGTH_R.get_address(), this.regmap.X_LENGTH_R.get());
+      this.axi_write(this.regmap.X_LENGTH_R);
       // ---> end
       // <--- begin
       // this.axi_write(GetAddrs(DMAC_Y_LENGTH),
       //                   `SET_DMAC_Y_LENGTH_Y_LENGTH(xfer_length_y));
       // ---- change
       this.regmap.Y_LENGTH_R.Y_LENGTH_F.set(xfer_length_y);
-      this.axi_write(this.regmap.Y_LENGTH_R.get_address(), this.regmap.Y_LENGTH_R.get());
+      this.axi_write(this.regmap.Y_LENGTH_R);
       // ---> end
     endtask : set_lengths
 
@@ -328,7 +328,7 @@ package dmac_api_pkg;
           // end
           // ---- change
           do
-            this.axi_read(this.regmap.TRANSFER_DONE_R.get_address(), this.regmap.TRANSFER_DONE_R.value);
+            this.axi_read(this.regmap.TRANSFER_DONE_R);
           while (~this.regmap.TRANSFER_DONE_R.value[transfer_id]);
           // ---> end
           `INFO(("Transfer id %0d DONE",transfer_id));
@@ -349,7 +349,7 @@ package dmac_api_pkg;
             // this.axi_read(GetAddrs(DMAC_PARTIAL_TRANSFER_LENGTH), regData);
             // segment_length_found = `GET_DMAC_PARTIAL_TRANSFER_LENGTH_PARTIAL_LENGTH(regData);
             // ---- change
-            this.axi_read(this.regmap.PARTIAL_TRANSFER_LENGTH_R.get_address(), this.regmap.PARTIAL_TRANSFER_LENGTH_R.value);
+            this.axi_read(this.regmap.PARTIAL_TRANSFER_LENGTH_R);
             segment_length_found = this.regmap.PARTIAL_TRANSFER_LENGTH_R.PARTIAL_LENGTH_F.get();
             // ---> end
             if (segment_length_found != segment_length) begin
@@ -362,7 +362,7 @@ package dmac_api_pkg;
             // this.axi_read(GetAddrs(DMAC_PARTIAL_TRANSFER_ID), regData);
             // id_found = `GET_DMAC_PARTIAL_TRANSFER_ID_PARTIAL_TRANSFER_ID(regData);
             // ---- change
-            this.axi_read(this.regmap.PARTIAL_TRANSFER_ID_R.get_address(), this.regmap.PARTIAL_TRANSFER_ID_R.value);
+            this.axi_read(this.regmap.PARTIAL_TRANSFER_ID_R);
             id_found = this.regmap.PARTIAL_TRANSFER_ID_R.PARTIAL_TRANSFER_ID_F.get();
             // ---> end
 
@@ -392,7 +392,7 @@ package dmac_api_pkg;
       // <--- begin
       // this.axi_read(GetAddrs(DMAC_TRANSFER_ID), transfer_id);
       // ---- change
-      this.axi_read(this.regmap.TRANSFER_ID_R.get_address(), this.regmap.TRANSFER_ID_R.value);
+      this.axi_read(this.regmap.TRANSFER_ID_R);
       transfer_id = this.regmap.TRANSFER_ID_R.TRANSFER_ID_F.get();
       // ---> end
       `INFO(("Found transfer ID = %0d", transfer_id));
@@ -420,7 +420,7 @@ package dmac_api_pkg;
         //                   `SET_DMAC_SRC_ADDRESS_SRC_ADDRESS(t.src_addr));
         // ---- change
         this.regmap.SRC_ADDRESS_R.SRC_ADDRESS_F.set(t.src_addr);
-        this.axi_write(this.regmap.SRC_ADDRESS_R.get_address(), this.regmap.SRC_ADDRESS_R.get());
+        this.axi_write(this.regmap.SRC_ADDRESS_R);
         // ---> end
       end
       if (p.DMA_TYPE_DEST == 0) begin
@@ -429,7 +429,7 @@ package dmac_api_pkg;
         //                   `SET_DMAC_DEST_ADDRESS_DEST_ADDRESS(t.dst_addr));
         // ---- change
         this.regmap.DEST_ADDRESS_R.DEST_ADDRESS_F.set(t.src_addr);
-        this.axi_write(this.regmap.DEST_ADDRESS_R.get_address(), this.regmap.DEST_ADDRESS_R.get());
+        this.axi_write(this.regmap.DEST_ADDRESS_R);
         // ---> end
       end
       // <--- begin
@@ -437,7 +437,7 @@ package dmac_api_pkg;
       //                   `SET_DMAC_X_LENGTH_X_LENGTH(t.length-1));
       // ---- change
       this.regmap.X_LENGTH_R.X_LENGTH_F.set(t.length-1);
-      this.axi_write(this.regmap.X_LENGTH_R.get_address(), this.regmap.X_LENGTH_R.get());
+      this.axi_write(this.regmap.X_LENGTH_R);
       // ---> end
 
       if (p.DMA_2D_TRANSFER == 1) begin
@@ -453,7 +453,7 @@ package dmac_api_pkg;
         //                   `SET_DMAC_Y_LENGTH_Y_LENGTH(t_2d.ylength-1));
         // ---- change
         this.regmap.Y_LENGTH_R.Y_LENGTH_F.set(t_2d.ylength-1);
-        this.axi_write(this.regmap.Y_LENGTH_R.get_address(), this.regmap.Y_LENGTH_R.get());
+        this.axi_write(this.regmap.Y_LENGTH_R);
         // ---> end
         if (p.DMA_TYPE_SRC == 0) begin
           // <--- begin
@@ -461,7 +461,7 @@ package dmac_api_pkg;
           //                   `SET_DMAC_SRC_STRIDE_SRC_STRIDE(t_2d.src_stride));
           // ---- change
           this.regmap.SRC_STRIDE_R.SRC_STRIDE_F.set(t_2d.src_stride);
-          this.axi_write(this.regmap.SRC_STRIDE_R.get_address(), this.regmap.SRC_STRIDE_R.get());
+          this.axi_write(this.regmap.SRC_STRIDE_R);
           // ---> end
         end
         if (p.DMA_TYPE_DEST == 0) begin
@@ -470,7 +470,7 @@ package dmac_api_pkg;
           //                   `SET_DMAC_DEST_STRIDE_DEST_STRIDE(t_2d.dst_stride));
           // ---- change
           this.regmap.DEST_STRIDE_R.DEST_STRIDE_F.set(t_2d.src_stride);
-          this.axi_write(this.regmap.DEST_STRIDE_R.get_address(), this.regmap.DEST_STRIDE_R.get());
+          this.axi_write(this.regmap.DEST_STRIDE_R);
           // ---> end
         end
       end
