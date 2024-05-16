@@ -33,7 +33,7 @@
 // ***************************************************************************
 // ***************************************************************************
 
-`include "utils.svh"
+//`include "utils.svh"
 
 module adi_spi_vip #(
   parameter MODE          = 0, // SLAVE=0
@@ -61,7 +61,7 @@ module adi_spi_vip #(
   localparam MODE_SLAVE   = 0;
   localparam MODE_MASTER  = 1;
   localparam MODE_MONITOR = 2;
-  import logger_pkg::*;
+  //import logger_pkg::*;
 
   spi_vip_if #(
     .MODE               (MODE),
@@ -80,7 +80,7 @@ module adi_spi_vip #(
   initial begin : ASSERT_PARAMETERS
     assert (MODE == MODE_SLAVE)
     else   begin
-      `ERROR(("Unsupported mode %s. Valid values are 0=SLAVE, 1=MASTER, 2=MONITOR. Only 0(SLAVE) is currently supported.",MODE));
+      //`ERROR(("Unsupported mode %s. Valid values are 0=SLAVE, 1=MASTER, 2=MONITOR. Only 0(SLAVE) is currently supported.",MODE));
     end
   end : ASSERT_PARAMETERS
 

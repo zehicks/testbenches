@@ -47,12 +47,13 @@ interface spi_vip_if #(
       CS_TO_MISO        = 0,
       DEFAULT_MISO_DATA = 'hCAFE
 ) ();
+
+  //import logger_pkg::*;
+
   logic sclk;
   wire  miso; // need net types here in case tb wants to tristate this
   wire  mosi; // need net types here in case tb wants to tristate this
   logic cs;
-
-  import logger_pkg::*;
 
   // internal
   logic intf_slave_mode;
@@ -88,14 +89,14 @@ interface spi_vip_if #(
     intf_slave_mode   = 0;
     intf_master_mode  = 1;
     intf_monitor_mode = 0;
-    `ERROR(("Unsupported mode master")); //TODO
+    //`ERROR(("Unsupported mode master")); //TODO
   endfunction : set_master_mode
 
   function void set_monitor_mode();
     intf_slave_mode   = 0;
     intf_master_mode  = 0;
     intf_monitor_mode = 1;
-    `ERROR(("Unsupported mode monitor")); //TODO
+    //`ERROR(("Unsupported mode monitor")); //TODO
   endfunction : set_monitor_mode
 
 endinterface
