@@ -44,28 +44,69 @@ package dmac_api_pkg;
   import reg_accessor_pkg::*;
   import dma_trans_pkg::*;
 
-  class dmac_api extends adi_peripheral;
+  class dmac_api_base extends adi_peripheral;
+    function new(
+      input string name, 
+      input reg_accessor bus, 
+      input bit [31:0] base_address);
+
+      super.new(name, bus, base_address);
+    endfunction
+
+    virtual task discover_params(); endtask
+    virtual task probe(); endtask
+    virtual task enable_dma(); endtask
+    virtual task disable_dma(); endtask
+    virtual task set_flags(
+      input bit[2:0] flags); endtask
+    virtual task wait_transfer_submission; endtask
+    virtual task transfer_start; endtask
+    virtual task set_dest_addr(
+      input int xfer_addr); endtask
+    virtual task set_src_addr(
+      input int xfer_addr); endtask
+    virtual task set_lengths(
+      input int xfer_length_x,
+      input int xfer_length_y); endtask
+    virtual task wait_transfer_done(
+      input bit [1:0] transfer_id,
+      input bit partial_segment = 0,
+      input int segment_length = 0,
+      input int timeut_in_us = 2000); endtask
+    virtual task transfer_id_get(output bit [1:0] transfer_id); endtask
+    virtual task submit_transfer(
+      dma_segment t,
+      output int next_transfer_id); endtask
+  endclass
+
+  class dmac_api #(`DMAC_PARAM_DECL) extends dmac_api_base;
 
     // DMAC parameters
     axi_dmac_params_t p;
 
     adi_regmap_dmac #(
-      .AXI_AXCACHE(0),
-      .AXI_AXPROT(0),
-      .BYTES_PER_BURST_WIDTH(4096),
-      .CACHE_COHERENT(1),
-      .CYCLIC(0),
-      .DMA_DATA_WIDTH_DEST(64),
-      .DMA_DATA_WIDTH_SRC(64),
-      .DMA_TYPE_DEST(1),
-      .DMA_TYPE_SRC(1),
-      .ID(0)
+      .AXI_AXCACHE(AXI_AXCACHE),
+      .AXI_AXPROT(AXI_AXPROT),
+      .CACHE_COHERENT(CACHE_COHERENT),
+      .CYCLIC(CYCLIC),
+      .DMA_AXI_PROTOCOL_DEST(DMA_AXI_PROTOCOL_DEST),
+      .DMA_AXI_PROTOCOL_SRC(DMA_AXI_PROTOCOL_SRC),
+      .DMA_DATA_WIDTH_DEST(DMA_DATA_WIDTH_DEST),
+      .DMA_DATA_WIDTH_SRC(DMA_DATA_WIDTH_SRC),
+      .DMA_TYPE_DEST(DMA_TYPE_DEST),
+      .DMA_TYPE_SRC(DMA_TYPE_SRC),
+      .ID(ID),
+      .MAX_BYTES_PER_BURST(MAX_BYTES_PER_BURST)
     ) regmap;
 
     // -----------------
     //
     // -----------------
-    function new(string name, reg_accessor bus, bit [31:0] base_address);
+    function new(
+      input string name, 
+      input reg_accessor bus, 
+      input bit [31:0] base_address);
+      
       super.new(name, bus, base_address);
       this.regmap = new;
     endfunction

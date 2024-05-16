@@ -44,6 +44,11 @@ import environment_pkg::*;
 import dmac_api_pkg::*;
 import data_offload_api_pkg::*;
 
+import `PKGIFY(test_harness, i_tx_dmac_0)::*;
+import `PKGIFY(test_harness, i_rx_dmac_0)::*;
+// import `PKGIFY(test_harness, i_tx_dmac_1)::*;
+// import `PKGIFY(test_harness, i_rx_dmac_1)::*;
+
 `define ADC_TRANSFER_LENGTH 32'h600
 
 program test_program;
@@ -51,15 +56,15 @@ program test_program;
   // declare the class instances
   environment env;
 
-  dmac_api dmac_tx_0;
-  dmac_api dmac_rx_0;
-  dmac_api dmac_tx_1;
-  dmac_api dmac_rx_1;
+  dmac_api #(`DMAC_PARAMS(test_harness, i_tx_dmac_0)) dmac_tx_0;
+  dmac_api #(`DMAC_PARAMS(test_harness, i_rx_dmac_0)) dmac_rx_0;
+  // dmac_api #(`DMAC_PARAMS(test_harness, i_tx_dmac_1)) dmac_tx_1;
+  // dmac_api #(`DMAC_PARAMS(test_harness, i_rx_dmac_1)) dmac_rx_1;
 
   data_offload_api do_tx_0;
   data_offload_api do_rx_0;
-  data_offload_api do_tx_1;
-  data_offload_api do_rx_1;
+  // data_offload_api do_tx_1;
+  // data_offload_api do_rx_1;
 
   initial begin
 
@@ -192,7 +197,7 @@ program test_program;
   // RX DMA transfer generator
 
   task rx_dma_transfer(
-    input dmac_api dmac, 
+    input dmac_api_base dmac, 
     input int xfer_addr, 
     input int xfer_length);
     dmac.set_flags('b110);
@@ -202,7 +207,7 @@ program test_program;
   endtask
 
   task tx_dma_transfer(
-    input dmac_api dmac, 
+    input dmac_api_base dmac, 
     input int xfer_addr, 
     input int xfer_length);
     dmac.set_flags('b010); // enable TLAST, CYCLIC

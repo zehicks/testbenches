@@ -33,12 +33,12 @@
 // ***************************************************************************
 // ***************************************************************************
 /* Auto generated Register Map */
-/* May 14 13:17:22 2024 */
+/* May 16 13:59:32 2024 */
 
 package adi_regmap_dmac_pkg;
   import regmap_pkg::*;
 
-  class adi_regmap_dmac #(int AXI_AXCACHE, int AXI_AXPROT, int BYTES_PER_BURST_WIDTH, int CACHE_COHERENT, int CYCLIC, int DMA_DATA_WIDTH_DEST, int DMA_DATA_WIDTH_SRC, int DMA_TYPE_DEST, int DMA_TYPE_SRC, int ID);
+  class adi_regmap_dmac #(int AXI_AXCACHE, int AXI_AXPROT, int CACHE_COHERENT, int CYCLIC, int DMA_AXI_PROTOCOL_DEST, int DMA_AXI_PROTOCOL_SRC, int DMA_DATA_WIDTH_DEST, int DMA_DATA_WIDTH_SRC, int DMA_TYPE_DEST, int DMA_TYPE_SRC, int ID, int MAX_BYTES_PER_BURST);
 
     /* DMA Controller (axi_dmac) */
     class VERSION extends register_base;
@@ -93,7 +93,7 @@ package adi_regmap_dmac_pkg;
       endfunction: new
     endclass
 
-    class INTERFACE_DESCRIPTION_1 #(int BYTES_PER_BURST_WIDTH, int DMA_DATA_WIDTH_DEST, int DMA_DATA_WIDTH_SRC, int DMA_TYPE_DEST, int DMA_TYPE_SRC) extends register_base;
+    class INTERFACE_DESCRIPTION_1 #(int DMA_AXI_PROTOCOL_DEST, int DMA_AXI_PROTOCOL_SRC, int DMA_DATA_WIDTH_DEST, int DMA_DATA_WIDTH_SRC, int DMA_TYPE_DEST, int DMA_TYPE_SRC, int MAX_BYTES_PER_BURST) extends register_base;
       field_base BYTES_PER_BEAT_DEST_LOG2_F;
       field_base DMA_TYPE_DEST_F;
       field_base BYTES_PER_BEAT_SRC_LOG2_F;
@@ -109,7 +109,7 @@ package adi_regmap_dmac_pkg;
         this.DMA_TYPE_DEST_F = new("DMA_TYPE_DEST", 5, 4, RO, DMA_TYPE_DEST, this);
         this.BYTES_PER_BEAT_SRC_LOG2_F = new("BYTES_PER_BEAT_SRC_LOG2", 11, 8, RO, $clog2(DMA_DATA_WIDTH_SRC/8), this);
         this.DMA_TYPE_SRC_F = new("DMA_TYPE_SRC", 13, 12, RO, DMA_TYPE_SRC, this);
-        this.BYTES_PER_BURST_WIDTH_F = new("BYTES_PER_BURST_WIDTH", 19, 16, RO, BYTES_PER_BURST_WIDTH, this);
+        this.BYTES_PER_BURST_WIDTH_F = new("BYTES_PER_BURST_WIDTH", 19, 16, RO, $clog2(`MIN(`MIN(((DMA_TYPE_DEST==0)?((DMA_AXI_PROTOCOL_DEST==1)?16:256):1024) * DMA_DATA_WIDTH_DEST / 8, ((DMA_TYPE_SRC==0)?((DMA_AXI_PROTOCOL_SRC==1)?16:256):1024) * DMA_DATA_WIDTH_SRC / 8), MAX_BYTES_PER_BURST)), this);
       endfunction: new
     endclass
 
@@ -489,7 +489,7 @@ package adi_regmap_dmac_pkg;
     PERIPHERAL_ID #(ID) PERIPHERAL_ID_R;
     SCRATCH SCRATCH_R;
     IDENTIFICATION IDENTIFICATION_R;
-    INTERFACE_DESCRIPTION_1 #(BYTES_PER_BURST_WIDTH, DMA_DATA_WIDTH_DEST, DMA_DATA_WIDTH_SRC, DMA_TYPE_DEST, DMA_TYPE_SRC) INTERFACE_DESCRIPTION_1_R;
+    INTERFACE_DESCRIPTION_1 #(DMA_AXI_PROTOCOL_DEST, DMA_AXI_PROTOCOL_SRC, DMA_DATA_WIDTH_DEST, DMA_DATA_WIDTH_SRC, DMA_TYPE_DEST, DMA_TYPE_SRC, MAX_BYTES_PER_BURST) INTERFACE_DESCRIPTION_1_R;
     INTERFACE_DESCRIPTION_2 #(AXI_AXCACHE, AXI_AXPROT, CACHE_COHERENT) INTERFACE_DESCRIPTION_2_R;
     IRQ_MASK IRQ_MASK_R;
     IRQ_PENDING IRQ_PENDING_R;
