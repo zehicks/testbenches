@@ -339,7 +339,7 @@ task fifo_spi_test();
   #100ns
   // Generate a FIFO transaction, write SDO first
   repeat (`NUM_OF_WORDS) begin
-    axi_write (`SPI_ENGINE_SPI_REGMAP_BA + GetAddrs(AXI_SPI_ENGINE_SDO_FIFO), (16'hDEAD << (`DATA_WIDTH - `DATA_DLENGTH)));
+    axi_write (`SPI_ENGINE_SPI_REGMAP_BA + GetAddrs(AXI_SPI_ENGINE_SDO_FIFO), (16'hDEAD ));
   end
 
   // Enqueue transfer to DUT

@@ -26,10 +26,11 @@ set hier_spi_engine spi_engine
 
 spi_engine_create $hier_spi_engine  $data_width $async_spi_clk $num_cs $num_sdi  \
                                     $num_sdo $sdi_delay $echo_sclk \
-                                    $cmd_mem_addr_width $data_mem_addr_width \
-                                    $sdi_fifo_addr_width $sdo_fifo_addr_width \
-                                    $sync_fifo_addr_width $cmd_fifo_addr_width \
-                                    $use_sdo_idle_state
+                                    $use_sdo_idle_state $cmd_mem_addr_width \
+                                    $data_mem_addr_width $sdi_fifo_addr_width \
+                                    $sdo_fifo_addr_width $sync_fifo_addr_width \
+                                    $cmd_fifo_addr_width \
+                                    
 
 ad_ip_instance axi_clkgen spi_clkgen
 ad_ip_parameter spi_clkgen CONFIG.CLK0_DIV 5
